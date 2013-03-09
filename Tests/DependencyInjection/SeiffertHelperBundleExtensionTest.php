@@ -29,13 +29,4 @@ class SeiffertHelperBundleExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Symfony\Component\HttpKernel\DependencyInjection\Extension', $this->extension);
     }
-
-    public function testExtensionProvidesHelperBrokerService()
-    {
-        $container = new ContainerBuilder();
-
-        $this->extension->load(array(), $container);
-
-        $this->assertTrue($container->has('seiffert.helper.broker'));
-    }
 }
