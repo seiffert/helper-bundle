@@ -1,5 +1,5 @@
 {
-    "name": "helper-bundle",
+    "name": "seiffert/helper-bundle",
     "description": "This bundle provides a structure for helper objects.",
     "require": {
         "php": ">=5.3.3",
