@@ -1,0 +1,6 @@
+parameters:
+  seiffert.helper.broker.class: Seiffert\HelperBundle\HelperBroker
+
+services:
+  seiffert.helper.broker:
+    class: %seiffert.helper.broker.class%
