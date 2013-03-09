@@ -1,5 +1,5 @@
 {
-    "hash": "46250b77c1f0f46d7cfb927bad51efc8",
+    "hash": "925436dfd2ff379c04ec9d3a75bcb43c",
     "packages": [
         {
             "name": "doctrine/common",
@@ -994,16 +994,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "3.7.16",
+            "version": "3.7.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "3.7.16"
+                "reference": "3.7.18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3.7.16",
-                "reference": "3.7.16",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3.7.18",
+                "reference": "3.7.18",
                 "shasum": ""
             },
             "require": {
@@ -1064,7 +1064,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-03-06 11:07:01"
+            "time": "2013-03-07 21:45:39"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
