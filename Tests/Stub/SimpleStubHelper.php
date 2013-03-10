@@ -14,7 +14,7 @@ class SimpleStubHelper implements HelperInterface
     /**
      * @return string[]|array
      */
-    public function getHelperMethodNames()
+    public static function getHelperMethodNames()
     {
         return array('simpleHelperMethod');
     }

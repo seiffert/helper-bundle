@@ -90,25 +90,12 @@ class RegisterHelpersCompilerPass implements CompilerPassInterface
 
         $helperMethods = array();
         if (is_a($className, 'Seiffert\HelperBundle\HelperInterface', true)) {
-            $helperMethods = $this->getHelperMethodsOfHelper($id, $container);
+            $helperMethods = $className::getHelperMethodNames();
         } else {
             $helperMethods = $this->getPublicMethodNamesOfClass($className);
         }
 
         return $helperMethods;
-    }
-
-    /**
-     * @param string $id
-     * @param ContainerBuilder $container@
-     * @return array|string[]
-     */
-    private function getHelperMethodsOfHelper($id, ContainerBuilder $container)
-    {
-        /** @var HelperInterface $service */
-        $service = $container->get($id);
-
-        return $service->getHelperMethodNames();
     }
 
     /**

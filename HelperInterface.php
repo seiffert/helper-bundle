@@ -7,5 +7,5 @@ interface HelperInterface
     /**
      * @return string[]|array
      */
-    public function getHelperMethodNames();
+    public static function getHelperMethodNames();
 }
