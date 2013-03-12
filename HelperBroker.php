@@ -13,6 +13,13 @@ class HelperBroker
      */
     private $helpers = array();
 
+    public function __construct(HelperSet $helperSet = null)
+    {
+        if (null !== $helperSet) {
+            $helperSet->registerHelpers($this);
+        }
+    }
+
     /**
      * @param string $name
      * @param callable $helper

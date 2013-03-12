@@ -43,4 +43,14 @@ class HelperBrokerTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('Seiffert\HelperBundle\Exception\UnknownHelperException');
         $this->broker->unknownMethod();
     }
+
+    public function testHelperBrokerRegistersHelperSet()
+    {
+        $helperSet = $this->getMock('Seiffert\HelperBundle\HelperSet');
+        $helperSet->expects($this->once())
+            ->method('registerHelpers')
+            ->with($this->isInstanceOf('Seiffert\HelperBundle\HelperBroker'));
+
+        new HelperBroker($helperSet);
+    }
 }
