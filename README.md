@@ -6,7 +6,7 @@ This bundle introduces a structure for helper objects.
 
 After developing Symfony2 applications for quite some time, I stumbled upon different use cases for some kind of helper objects. One of them for instance are controllers: As soon as you stop to use `FrameworkBundle`'s default controller as base class for your controllers, you probably start writing code that replaces the helper functions in the default controller. This code will probably be required in most of your controllers. In this situation, you either create controller classes that all have a lot of dependencies that are injected by the DIC, you re-introduce a base controller class, or you employ some kind of helper objects.
 
-This bundle solves this kind of situations by introducing helper objects that are managed by the dependency injection container (thus they are created lazily and will be reused) and are made available via a single helper object - the `HelperBroker`. One broker aggregates multiple helpers that are collected and configured during container compilation and proxies calls to helper methods to these helper objects. 
+This bundle solves this kind of situations by introducing helper objects that are managed by the dependency injection container (thus they are created lazily and will be reused) and are made available via a single helper object - the `HelperBroker`. One broker aggregates multiple helpers that are collected and configured during container compilation and proxies calls to helper methods to the actual helper objects. 
 
 ## Setup
 
@@ -36,7 +36,11 @@ Activate the bundle in your AppKernel:
 
 ## Usage
 
-To configure helpers, you just have to implement your custom helper classes, add them to the DIC, and tag them like this:
+There are different ways of using helpers and helper brokers. In the following, I will explain the two, which appear most useful to me.
+
+### via tagged service
+
+To configure helpers as services, you just implement your custom helper classes, add definitions for them to the DIC, and tag them like this:
 
     services:
         my.helper:
@@ -52,7 +56,7 @@ To configure helpers, you just have to implement your custom helper classes, add
             arguments:
                 - @my.helper.broker
 
-The argument injected into `My\Service\ThatRequiresHelpService` is of type `Seiffert\HelperBundle\HelperBroker` and answers to all methods defined in your helper classes `My\Helper\MySecondHelper` and `My\Helper\MyHelper`. This is done by proxying these method calls to the actual helper classes using `__call`.
+The argument injected into the class `My\Service\ThatRequiresHelpService` is of type `Seiffert\HelperBundle\HelperBroker` and answers to all methods defined in your helper classes `My\Helper\MySecondHelper` and `My\Helper\MyHelper`. This is done by proxying these method calls to the actual helper classes using `__call`.
 To further illustrate the usage of a helper broker using the same scenario as above, I will sketch out the mentioned classes:
 
 **`My\Helper\MyHelper`:**
@@ -76,7 +80,7 @@ To further illustrate the usage of a helper broker using the same scenario as ab
         }
     }
     
-**`My\Helper\MyHelper`:**
+**`My\Helper\MySecondHelper`:**
 
     <?php
 
@@ -84,7 +88,7 @@ To further illustrate the usage of a helper broker using the same scenario as ab
 
     use Seiffert\HelperBundle\HelperInterface;
 
-    class MyHelper implements HelperInterface
+    class MySecondHelper implements HelperInterface
     {
         public static function getHelperMethodNames()
         {
@@ -123,7 +127,45 @@ To further illustrate the usage of a helper broker using the same scenario as ab
         }
     }    
 
-By using helper brokers, you can minimize the dependencies of your own services and group helper objects, that are required in similar situations. Examples of helper classes can be found in the related [SeiffertControllerHelperBundle](https://github.com/seiffert/controller-helper-bundle).
+By using helper brokers, you can minimize the dependencies of your own services and group helpers that are required in similar situations. Examples of helper classes can be found in the related [SeiffertControllerHelperBundle](https://github.com/seiffert/controller-helper-bundle).
+
+### via helper sets
+
+Another way of configuring a helper broker is to instantiate it with a helper set. A helper set is a collection of helper objects that knows how to add its helpers to a helper broker. The good thing with helper sets is that you can put the instantiation of all your helpers in one place (which is not as important as putting it outside of your business logic, where you are using these helpers). This place is your custom subclass of `Seiffert\HelperBundle\HelperSet`:
+
+**`My\HelperSet`:**
+    
+    <?php
+    
+    namespace My;
+
+    use Seiffert\HelperBundle\HelperSet as BaseHelperSet;
+
+    class HelperSet extends BaseHelperSet
+    {
+        /**
+         * @return array|object[]
+         */
+        public function getHelpers()
+        {
+            return array(
+                new MyHelper(),
+                new MySecondHelper()
+            );
+        }
+    }
+
+Now if you want to create a helper broker with this set, you just have to pass an instance of it to the helper broker's constructor:
+
+**Somewhere else:**
+    <?php
+    
+    use My\HelperSet;
+    use Seiffert\HelperBundle\HelperBroker;
+    
+    $h = new HelperBroker(new HelperSet());
+
+    echo $h->fooHelp();
 
 ## Advanced Topics
 
