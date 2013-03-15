@@ -158,6 +158,7 @@ Another way of configuring a helper broker is to instantiate it with a helper se
 Now if you want to create a helper broker with this set, you just have to pass an instance of it to the helper broker's constructor:
 
 **Somewhere else:**
+
     <?php
     
     use My\HelperSet;
